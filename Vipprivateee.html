@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>privateee</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fafafa;
+            color: #262626;
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #262626;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Stories */
+        .stories-container {
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            margin: 16px;
+            padding: 16px 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .stories {
+            display: flex;
+            gap: 16px;
+        }
+
+        .story {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            min-width: 66px;
+        }
+
+        .story-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 2px solid #e91e63;
+            padding: 2px;
+            margin-bottom: 4px;
+        }
+
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .story-username {
+            font-size: 12px;
+            color: #262626;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 66px;
+        }
+
+        /* Feed */
+        .feed {
+            max-width: 470px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .post {
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-username {
+            font-weight: 600;
+            font-size: 14px;
+            color: #262626;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        
+        .post-video {
+            width: 100%;
+            height: 400px;
+            background-color: #000;
+            cursor: pointer;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+        }
+
+        .post-actions-left {
+            display: flex;
+            gap: 16px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.liked {
+            color: #e91e63;
+        }
+
+        .post-likes {
+            padding: 0 16px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .post-caption {
+            padding: 0 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .post-username-caption {
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .post-comments {
+            padding: 0 16px;
+            font-size: 14px;
+            color: #8e8e8e;
+            margin-bottom: 8px;
+        }
+
+        .post-time {
+            padding: 0 16px 16px;
+            font-size: 10px;
+            color: #8e8e8e;
+            text-transform: uppercase;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #dbdbdb;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-item.active {
+            color: #262626;
+        }
+
+        .nav-item:not(.active) {
+            color: #8e8e8e;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #8e8e8e;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stories-container {
+                margin: 8px;
+            }
+            
+            .feed {
+                padding: 0 8px;
+            }
+            
+            .post {
+                margin-bottom: 16px;
+            }
+        }
+
+        /* Animations */
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .heart-animation {
+            animation: heartBeat 0.6s ease-in-out;
+        }
+
+        /* Scrollbar */
+        .stories-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .stories-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .stories-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">privateee</div>
+        <div class="header-icons">
+                       
+        </div>
+    </div>
+
+    <!-- Feed -->
+    <div class="feed" id="feed">
+        <!-- Posts serão inseridos aqui pelo JavaScript -->
+    </div>
+
+    <div class="loading" id="loading">jaja teremos videos novos 🔥😈😈...</div>
+  
+
+    <script>
+        // Dados simulados dos posts (agora com vídeos e apenas 2 imagens)
+        const postsData = [
+            {
+                id: 1,
+                username: "GABY LOPEZ",
+                avatar: "https://files.catbox.moe/6vt7n6.jpg",
+                media: "https://files.catbox.moe/19oxio.mp4",
+                isVideo: true,
+                likes: 54863,
+                caption: "GOSTOSO COMENDO MINHA BUCETA 🔥",
+                comments: "Ver todos os 23 comentários",
+                time: "2 horas"
+            },
+            {
+                id: 2,
+                username: "GABY LOPEZ",
+                avatar: "https://files.catbox.moe/6vt7n6.jpg",
+                media: "https://files.catbox.moe/zb9ipf.mp4",
+                isVideo: true,
+                likes: 899364,
+                caption: "FUDENDO ESSA SAFADA 😈😈",
+                comments: "Ver todos os 12 comentários",
+                time: "4 horas"
+            },
+            {
+                id: 3,
+                username: "GABY LOPEZ",
+                avatar: "https://files.catbox.moe/6vt7n6.jpg",
+                media: "https://files.catbox.moe/zk44rs.mp4",
+                isVideo: true,
+                likes: 25466,
+                caption: "ARROMBOU MINHA BUCETA 😈🔥",
+                comments: "Ver todos os 45 comentários",
+                time: "6 horas"
+            },
+            {
+                id: 4,
+                username: "GABY LOPEZ",
+                avatar: "https://files.catbox.moe/6vt7n6.jpg",
+                media: "https://files.catbox.moe/t3h82x.mp4",
+                isVideo: true,
+                likes: 1738,
+                caption: "DELICIA SEXO COM ASSINANTE 🔥",
+                comments: "Ver todos os 31 comentários",
+                time: "8 horas"
+            }
+        ];
+
+        let likedPosts = new Set();
+
+        // Função para criar um post
+        function createPost(post) {
+            const isLiked = likedPosts.has(post.id);
+            
+            // Determina se vai mostrar imagem ou vídeo
+            const mediaContent = post.isVideo 
+                ? `<video class="post-video" controls ondblclick="likePost(${post.id})">
+                      <source src="${post.media}" type="video/mp4">
+                      Seu navegador não suporta vídeos HTML5.
+                   </video>`
+                : `<img src="${post.media}" alt="Post" class="post-image" ondblclick="likePost(${post.id})">`;
+            
+            return `
+                <div class="post" data-post-id="${post.id}">
+                    <div class="post-header">
+                        <img src="${post.avatar}" alt="${post.username}" class="post-avatar">
+                        <span class="post-username">${post.username}</span>
+                    </div>
+                    ${mediaContent}
+                    <div class="post-actions">
+                        <div class="post-actions-left">
+                            <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                                <svg width="24" height="24" fill="${isLiked ? '#e91e63' : 'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            </button>
+                            <button class="action-btn" onclick="focusOnComment(${post.id})">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </button>
+                            <button class="action-btn">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M17 1l4 4-4 4"/>
+                                    <path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/>
+                                    <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <button class="action-btn">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="post-likes">${post.likes} curtidas</div>
+                    <div class="post-caption">
+                        <span class="post-username-caption">${post.username}</span>
+                        ${post.caption}
+                    </div>
+                    <div class="post-comments">${post.comments}</div>
+                    <div class="post-time">${post.time}</div>
+                </div>
+            `;
+        }
+
+        // Função para curtir/descurtir post
+        function toggleLike(postId) {
+            const post = document.querySelector(`[data-post-id="${postId}"]`);
+            const likeBtn = post.querySelector('.action-btn');
+            const likesElement = post.querySelector('.post-likes');
+            const heartIcon = likeBtn.querySelector('svg');
+            
+            if (likedPosts.has(postId)) {
+                likedPosts.delete(postId);
+                likeBtn.classList.remove('liked');
+                heartIcon.setAttribute('fill', 'none');
+                heartIcon.style.color = '#262626';
+                
+                // Diminuir curtidas
+                const currentLikes = parseInt(likesElement.textContent);
+                likesElement.textContent = `${currentLikes - 1} curtidas`;
+            } else {
+                likedPosts.add(postId);
+                likeBtn.classList.add('liked');
+                heartIcon.setAttribute('fill', '#e91e63');
+                heartIcon.style.color = '#e91e63';
+                
+                // Aumentar curtidas
+                const currentLikes = parseInt(likesElement.textContent);
+                likesElement.textContent = `${currentLikes + 1} curtidas`;
+                
+                // Animação do coração
+                likeBtn.classList.add('heart-animation');
+                setTimeout(() => {
+                    likeBtn.classList.remove('heart-animation');
+                }, 600);
+            }
+        }
+
+        // Função para curtir com duplo clique
+        function likePost(postId) {
+            if (!likedPosts.has(postId)) {
+                toggleLike(postId);
+            }
+        }
+
+        // Função para focar nos comentários (simulação)
+        function focusOnComment(postId) {
+            const post = document.querySelector(`[data-post-id="${postId}"]`);
+            const commentInput = post.querySelector('.comment-input');
+            
+            if (commentInput) {
+                commentInput.focus();
+            } else {
+                alert("Funcionalidade de comentários esta em desenvolvimento!");
+            }
+        }
+
+        // Função para carregar posts
+        function loadPosts() {
+            const feed = document.getElementById('feed');
+            postsData.forEach(post => {
+                feed.innerHTML += createPost(post);
+            });
+        }
+
+        // Navegação inferior
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Remove active de todos
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    // Adiciona active no clicado
+                    item.classList.add('active');
+                });
+            });
+        }
+
+        // Scroll infinito simulado
+        function setupInfiniteScroll() {
+            let loading = false;
+            
+            window.addEventListener('scroll', () => {
+                if (loading) return;
+                
+                const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+                
+                if (scrollTop + clientHeight >= scrollHeight - 5) {
+                    loading = true;
+                    document.getElementById('loading').style.display = 'block';
+                    
+                    // Simula carregamento
+                    setTimeout(() => {
+                        // Aqui você adicionaria mais posts
+                        document.getElementById('loading').style.display = 'none';
+                        loading = false;
+                    }, 2000);
+                }
+            });
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPosts();
+            setupNavigation();
+            setupInfiniteScroll();
+        });
+    </script>
+</body>
+</html>
